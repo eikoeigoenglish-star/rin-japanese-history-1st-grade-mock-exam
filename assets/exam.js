@@ -72,6 +72,33 @@ function renderRomanItems(q) {
   `;
 }
 
+
+function renderImages(q) {
+  if (!q.images?.length) return '';
+
+  return `
+    <div class="question-images" aria-label="問${q.number}の資料画像">
+      ${q.images.map(image => `
+        <figure class="question-image-item">
+          <div class="question-image-frame">
+            <img
+              src="${escapeHtml(image.src)}"
+              alt="${escapeHtml(image.alt || `資料${image.label || ''}`)}"
+              loading="lazy"
+              onerror="this.closest('.question-image-frame').classList.add('image-missing'); this.style.display='none';"
+            >
+            <div class="image-missing-message">
+              画像ファイルが見つかりません<br>
+              <code>${escapeHtml(image.src)}</code>
+            </div>
+          </div>
+          ${image.label ? `<figcaption>${escapeHtml(image.label)}</figcaption>` : ''}
+        </figure>
+      `).join('')}
+    </div>
+  `;
+}
+
 function renderChoices(q) {
   if (!q.choices?.length) return '';
   return `
@@ -97,7 +124,8 @@ function renderQuestionCard(q) {
 
       ${renderRomanItems(q)}
 
-      ${q.visual_material ? `<div class="visual-box"><strong>使用資料</strong><br>${nl2br(q.visual_material)}</div>` : ''}
+      ${q.visual_material && !q.images?.length ? `<div class="visual-box"><strong>使用資料</strong><br>${nl2br(q.visual_material)}</div>` : ''}
+      ${renderImages(q)}
       ${q.source ? `<div class="source-box"><strong>史料</strong><br>${nl2br(q.source)}</div>` : ''}
       ${renderChoices(q)}
     </section>
@@ -191,7 +219,8 @@ function renderAnswerCard(q) {
 
       <p class="question-text">${nl2br(q.text || '')}</p>
       ${renderRomanItems(q)}
-      ${q.visual_material ? `<div class="visual-box"><strong>使用資料</strong><br>${nl2br(q.visual_material)}</div>` : ''}
+      ${q.visual_material && !q.images?.length ? `<div class="visual-box"><strong>使用資料</strong><br>${nl2br(q.visual_material)}</div>` : ''}
+      ${renderImages(q)}
       ${q.source ? `<div class="source-box"><strong>史料</strong><br>${nl2br(q.source)}</div>` : ''}
       ${renderChoices(q)}
 

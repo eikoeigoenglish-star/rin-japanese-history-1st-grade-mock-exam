@@ -464,3 +464,72 @@ code {
     grid-column: auto;
   }
 }
+
+
+/* ===== 資料画像（問題ページ・解答ページ共通） ===== */
+
+.question-images {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 22px;
+  margin: 18px 0 20px;
+}
+
+.question-image-item {
+  margin: 0;
+  min-width: 0;
+}
+
+.question-image-frame {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.question-image-frame img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+}
+
+.question-image-item figcaption {
+  margin-top: 6px;
+  text-align: center;
+  font: 700 1rem/1.4 var(--sans);
+}
+
+.image-missing-message {
+  display: none;
+  padding: 28px 14px;
+  color: var(--muted);
+  text-align: center;
+  font: 0.86rem/1.6 var(--sans);
+}
+
+.question-image-frame.image-missing .image-missing-message {
+  display: block;
+}
+
+/* 配置図など縦横比が異なる画像でも、無理にトリミングしない */
+.page-exam .question-image-frame img,
+.page-answers .question-image-frame img {
+  object-fit: contain;
+}
+
+@media (max-width: 680px) {
+  .question-images {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .question-image-frame img {
+    max-height: none;
+  }
+}
