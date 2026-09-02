@@ -1,5 +1,6 @@
 const AVAILABLE_MOCKS = [
-  { id: '001', file: 'mock001.json', label: '第1回模試', note: '30問 / 4択20・記述8・論述2' }
+  { id: '001', file: 'mock001.json', label: '第1回模試', note: '30問 / 4択20・記述8・論述2' },
+  { id: '002', file: 'mock002.json', label: '第2回模試', note: '30問 / 4択20・記述8・論述2' }
 ];
 
 function byId(id) {
