@@ -104,6 +104,49 @@ function renderQuestionCard(q) {
   `;
 }
 
+
+function getSummaryAnswer(q) {
+  if (q.model_answer) return q.model_answer;
+  return q.answer || '—';
+}
+
+function renderAnswerSummary(data) {
+  const questions = data.questions || [];
+
+  const rows = questions.map(q => {
+    const answer = getSummaryAnswer(q);
+    const isEssay = q.type?.includes('論述');
+
+    if (isEssay) {
+      return `
+        <div class="answer-summary-item essay">
+          <span class="summary-number">${q.number}</span>
+          <span class="summary-dash">―</span>
+          <span class="summary-answer">${nl2br(answer)}</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="answer-summary-item">
+        <span class="summary-number">${q.number}</span>
+        <span class="summary-dash">―</span>
+        <span class="summary-answer">${nl2br(answer)}</span>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="answer-summary-heading">
+      <div class="summary-kicker">${escapeHtml(data.__meta?.label || '')}</div>
+      <h2>正解一覧</h2>
+    </div>
+    <div class="answer-summary-box">
+      <div class="answer-summary-grid">${rows}</div>
+    </div>
+  `;
+}
+
 function renderAnswerNotes(q) {
   const blocks = [];
   if (q.accepted_variants) blocks.push(`<p><strong>表記揺れ</strong><br>${nl2br(q.accepted_variants)}</p>`);
@@ -229,12 +272,11 @@ async function renderAnswersPage() {
   setupCrossLinks(mockId);
   try {
     const data = await fetchMockData(mockId);
-    const meta = byId('exam-meta');
+    const summary = byId('answer-summary');
     const mount = byId('answers-container');
-    const jumps = byId('answer-nav-top');
-    byId('page-title').textContent = `解答ページ｜${data.__meta?.label || ''}`;
-    meta.innerHTML = buildMetaBlock(data);
-    jumps.innerHTML = renderQuestionJumpLinks(data.questions, 'a');
+
+    byId('page-title').textContent = `解答・解説｜${data.__meta?.label || ''}`;
+    summary.innerHTML = renderAnswerSummary(data);
     mount.innerHTML = data.questions.map(renderAnswerCard).join('');
     setupBottomNav(mockId, true);
   } catch (err) {
