@@ -16,8 +16,7 @@ function escapeHtml(value) {
 }
 
 function nl2br(value) {
-  return escapeHtml(value).replace(/
-/g, '<br>');
+  return escapeHtml(value).replace(/\n/g, '<br>');
 }
 
 function getMockIdFromQuery() {
