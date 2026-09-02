@@ -87,20 +87,10 @@ function renderChoices(q) {
 }
 
 function renderQuestionCard(q) {
-  const isEssay = q.type?.includes('論述');
-  const isShort = q.type?.includes('記述');
-  const answerSpaceClass = isEssay ? 'lines' : 'short';
-  const answerSpaceLabel = isEssay ? '解答メモ欄（論述用）' : (isShort ? '解答メモ欄（記述用）' : '解答メモ欄');
-
   return `
     <section class="question-card" id="q${q.number}">
       <div class="question-head">
         <div class="question-label">問${q.number}</div>
-        <div class="question-meta">
-          ${q.period ? `<span class="badge">${escapeHtml(q.period)}</span>` : ''}
-          ${q.type ? `<span class="badge">${escapeHtml(q.type)}</span>` : ''}
-          ${q.difficulty ? `<span class="badge">難易度 ${escapeHtml(q.difficulty)}</span>` : ''}
-        </div>
       </div>
 
       <p class="question-text">${nl2br(q.text || '')}</p>
@@ -110,9 +100,6 @@ function renderQuestionCard(q) {
       ${q.visual_material ? `<div class="visual-box"><strong>使用資料</strong><br>${nl2br(q.visual_material)}</div>` : ''}
       ${q.source ? `<div class="source-box"><strong>史料</strong><br>${nl2br(q.source)}</div>` : ''}
       ${renderChoices(q)}
-
-      <div class="question-type-label">${escapeHtml(answerSpaceLabel)}</div>
-      <div class="answer-space ${answerSpaceClass}"></div>
     </section>
   `;
 }
@@ -225,8 +212,10 @@ async function renderExamPage() {
     const mount = byId('exam-container');
     const jumps = byId('exam-nav-top');
     byId('page-title').textContent = `問題ページ｜${data.__meta?.label || ''}`;
-    meta.innerHTML = buildMetaBlock(data);
-    jumps.innerHTML = renderQuestionJumpLinks(data.questions, 'q');
+    meta.innerHTML = '';
+    meta.style.display = 'none';
+    jumps.innerHTML = '';
+    jumps.style.display = 'none';
     mount.innerHTML = data.questions.map(renderQuestionCard).join('');
     setupBottomNav(mockId, false);
   } catch (err) {
