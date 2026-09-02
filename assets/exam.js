@@ -263,13 +263,15 @@ function setupBottomNav(mockId, isAnswers) {
 function renderHomePage() {
   const mount = byId('mock-list');
   if (!mount) return;
+
   mount.innerHTML = AVAILABLE_MOCKS.map(mock => `
     <article class="mock-card">
-      <h3>${escapeHtml(mock.label)}</h3>
-      <div class="mock-meta">${escapeHtml(mock.note || '')}<br><code>data/${escapeHtml(mock.file)}</code></div>
-      <div class="mock-actions">
-        <a href="exam.html?mock=${encodeURIComponent(mock.id)}">問題ページ</a>
-        <a href="answers.html?mock=${encodeURIComponent(mock.id)}">解答ページ</a>
+      <div class="mock-title-row">
+        <h3>${escapeHtml(mock.label)}</h3>
+        <div class="mock-actions">
+          <a href="exam.html?mock=${encodeURIComponent(mock.id)}">問題ページ</a>
+          <a href="answers.html?mock=${encodeURIComponent(mock.id)}">解答ページ</a>
+        </div>
       </div>
     </article>
   `).join('');

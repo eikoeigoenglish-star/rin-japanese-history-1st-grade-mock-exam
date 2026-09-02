@@ -533,3 +533,46 @@ code {
     max-height: none;
   }
 }
+
+
+/* ===== トップページ公開向け整理 ===== */
+
+.page-home .site-header .wrap {
+  padding-bottom: 24px;
+}
+
+.page-home .home-main {
+  padding-top: 28px;
+}
+
+.page-home .mock-card {
+  padding: 16px 18px;
+}
+
+.mock-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.mock-title-row h3 {
+  margin: 0;
+}
+
+.mock-title-row .mock-actions {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 620px) {
+  .mock-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mock-title-row .mock-actions {
+    margin-left: 0;
+  }
+}
