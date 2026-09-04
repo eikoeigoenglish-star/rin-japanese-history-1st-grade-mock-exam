@@ -576,3 +576,37 @@ code {
     margin-left: 0;
   }
 }
+
+
+/* ===== トップページ：模試カードのはみ出し防止 ===== */
+.page-home .mock-title-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.page-home .mock-title-row h3 {
+  white-space: nowrap;
+}
+
+.page-home .mock-title-row .mock-actions {
+  width: 100%;
+  margin-left: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.page-home .mock-title-row .mock-actions a {
+  display: block;
+  min-width: 0;
+  padding: 10px 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .page-home .mock-title-row .mock-actions {
+    grid-template-columns: 1fr;
+  }
+}
