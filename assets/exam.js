@@ -6,7 +6,8 @@ const AVAILABLE_MOCKS = [
   { id: '005', file: 'mock005.json', label: '第5回模試', note: '30問 / 4択20・記述8・論述2' },
   { id: '006', file: 'mock006.json', label: '第6回模試', note: '30問 / 4択20・記述8・論述2' },
   { id: '007', file: 'mock007.json', label: '第7回模試', note: '30問 / 4択20・記述8・論述2' },
-  { id: '008', file: 'mock008.json', label: '第8回模試', note: '30問 / 4択20・記述8・論述2' }
+  { id: '008', file: 'mock008.json', label: '第8回模試', note: '30問 / 4択20・記述8・論述2' },
+  { id: '009', file: 'mock009.json', label: '第9回模試', note: '30問 / 4択20・記述8・論述2' }
 ];
 
 function byId(id) {
