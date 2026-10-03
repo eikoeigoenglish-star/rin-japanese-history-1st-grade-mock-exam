@@ -284,14 +284,38 @@ function setupBottomNav(mockId, isAnswers) {
   `;
 }
 
-function renderHomePage() {
+function renderExamDifficultyMark(level) {
+  if (level !== '難' && level !== '易') return '';
+  const modifier = level === '難' ? 'is-hard' : 'is-easy';
+  return `<span class="mock-difficulty-mark ${modifier}" aria-label="この模試の難易度は${escapeHtml(level)}">${escapeHtml(level)}</span>`;
+}
+
+async function fetchExamDifficulty(mock) {
+  try {
+    const res = await fetch(`data/${mock.file}`);
+    if (!res.ok) return '普通';
+    const data = await res.json();
+    return data.exam_difficulty || '普通';
+  } catch {
+    return '普通';
+  }
+}
+
+async function renderHomePage() {
   const mount = byId('mock-list');
   if (!mount) return;
 
-  mount.innerHTML = AVAILABLE_MOCKS.map(mock => `
+  const mocks = await Promise.all(
+    AVAILABLE_MOCKS.map(async mock => ({
+      ...mock,
+      examDifficulty: await fetchExamDifficulty(mock)
+    }))
+  );
+
+  mount.innerHTML = mocks.map(mock => `
     <article class="mock-card">
       <div class="mock-title-row">
-        <h3>${escapeHtml(mock.label)}</h3>
+        <h3>${escapeHtml(mock.label)}${renderExamDifficultyMark(mock.examDifficulty)}</h3>
         <div class="mock-actions">
           <a href="exam.html?mock=${encodeURIComponent(mock.id)}">問題ページ</a>
           <a href="answers.html?mock=${encodeURIComponent(mock.id)}">解答ページ</a>

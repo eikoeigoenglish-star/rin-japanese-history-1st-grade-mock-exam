@@ -610,3 +610,19 @@ code {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ===== トップページ：模試全体の難易度表示 ===== */
+.mock-difficulty-mark {
+  margin-left: 0.45em;
+  font: 800 0.9em/1 var(--sans);
+  vertical-align: 0.04em;
+}
+
+.mock-difficulty-mark.is-hard {
+  color: #c62828;
+}
+
+.mock-difficulty-mark.is-easy {
+  color: #1565c0;
+}
