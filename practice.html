@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#101014">
+  <title>演習モード | 歴史能力検定 日本史1級模擬試験</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/exam.css">
+  <link rel="stylesheet" href="assets/practice.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKL5WQJBSB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TKL5WQJBSB');
+  </script>
+</head>
+<body class="page-practice">
+<div class="app">
+
+  <!-- 1. ヘッダー ／ 2. モード切替 -->
+  <header class="app-header">
+    <p class="app-eyebrow">JAPANESE HISTORY GRADE 1</p>
+    <h1 class="app-title"><span class="app-title-main">歴史能力検定 <span class="nowrap">日本史1級模擬試験</span></span><span class="app-title-sub">演習トレーニング</span></h1>
+    <p class="app-lead" id="app-lead"><span id="total-question-count">—</span>問すべてをトリプルにするのが目標です。</p>
+    <nav class="mode-switch app-mode-switch" aria-label="モード切替">
+      <a href="index.html" class="mode-switch-item" data-mode-link="mock">
+        <span class="mode-switch-mark" aria-hidden="true"></span>模試モード
+      </a>
+      <a href="practice.html" class="mode-switch-item is-current" aria-current="page" data-mode-link="practice">
+        <span class="mode-switch-mark" aria-hidden="true"></span>演習モード
+      </a>
+    </nav>
+  </header>
+
+  <div id="load-notice" class="load-notice" hidden></div>
+
+  <!-- ========== ① 演習設定 ========== -->
+  <main id="screen-setup" class="screen" aria-label="演習の設定">
+
+    <!-- 3. 進捗 -->
+    <section class="card mastery-card" aria-labelledby="mastery-heading">
+      <div class="card-head">
+        <h2 id="mastery-heading" class="card-title">進捗</h2>
+        <p id="mastery-headline" class="mastery-headline">読み込み中…</p>
+        <button type="button" id="reset-progress-btn" class="btn-pill-small">進捗を消す</button>
+      </div>
+      <div id="mastery-bar" class="mastery-bar" role="progressbar" aria-label="トリプル到達率"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="mastery-seg seg-triple" data-seg="triple"></span>
+        <span class="mastery-seg seg-double" data-seg="double"></span>
+        <span class="mastery-seg seg-hit" data-seg="hit"></span>
+        <span class="mastery-seg seg-miss" data-seg="miss"></span>
+        <span class="mastery-seg seg-new" data-seg="new"></span>
+      </div>
+      <ul class="mastery-legend" aria-label="習得度の内訳">
+        <li><span class="dot dot-triple" aria-hidden="true"></span>トリプル<b data-count="triple">0</b></li>
+        <li><span class="dot dot-double" aria-hidden="true"></span>ダブル<b data-count="double">0</b></li>
+        <li><span class="dot dot-hit" aria-hidden="true"></span>ヒット<b data-count="hit">0</b></li>
+        <li><span class="dot dot-miss" aria-hidden="true"></span>ミス<b data-count="miss">0</b></li>
+        <li><span class="dot dot-new" aria-hidden="true"></span>未出題<b data-count="new">0</b></li>
+      </ul>
+      <p id="mastery-note" class="card-desc mastery-note">正解すると1段上がり、3回連続で正解するとトリプル。間違えるとミスに戻ります。</p>
+    </section>
+
+    <!-- 4. 回次 -->
+    <section class="card" aria-labelledby="mock-heading">
+      <div class="card-head">
+        <h2 id="mock-heading" class="card-title">回次</h2>
+        <p class="card-note">複数選択可</p>
+        <div class="card-head-actions">
+          <button type="button" id="mock-select-all" class="btn-pill-small">すべて選択</button>
+          <button type="button" id="mock-clear-all" class="btn-pill-small">すべて解除</button>
+        </div>
+      </div>
+      <p class="card-desc">学習したい回を選びます。複数回を選んで横断して出題できます。<span class="card-desc-sub">難・易は模試全体の難易度です。</span></p>
+      <div id="mock-options" class="chip-group chip-grid-mock" role="group" aria-labelledby="mock-heading"></div>
+    </section>
+
+    <!-- 5. 問題種類 -->
+    <section class="card" aria-labelledby="type-heading">
+      <div class="card-head">
+        <h2 id="type-heading" class="card-title">問題種類</h2>
+        <p class="card-note">複数選択可</p>
+      </div>
+      <p class="card-desc">4択はタップで選択、記述は入力、論述は模範解答の虫食い入力。全問に回答してから最後にまとめて採点します（記述・論述は完全一致、論述は全空欄一致で○）。</p>
+      <div id="type-options" class="chip-group chip-grid-type" role="group" aria-labelledby="type-heading"></div>
+    </section>
+
+    <!-- 6. 出題状態 -->
+    <section class="card" aria-labelledby="stage-heading">
+      <div class="card-head">
+        <h2 id="stage-heading" class="card-title">出題状態</h2>
+        <p class="card-note">複数選択可</p>
+      </div>
+      <p class="card-desc">ミスとヒットだけに絞ると、弱点だけを回せます。</p>
+      <div id="stage-options" class="chip-group chip-grid-stage" role="group" aria-labelledby="stage-heading"></div>
+    </section>
+
+    <!-- 7. 問題数 -->
+    <section class="card" aria-labelledby="count-heading">
+      <div class="card-head">
+        <h2 id="count-heading" class="card-title">問題数</h2>
+        <p id="count-availability" class="card-note" aria-live="polite">1つ選択</p>
+      </div>
+      <p class="card-desc">スキマ時間なら1〜5問がおすすめ。対象が指定数より少ないときは、ある問題だけ出題します。</p>
+      <div id="count-options" class="chip-group chip-grid-count" role="radiogroup" aria-labelledby="count-heading"></div>
+    </section>
+
+    <!-- 8. 出題順 -->
+    <section class="card" aria-labelledby="order-heading">
+      <div class="card-head">
+        <h2 id="order-heading" class="card-title">出題順</h2>
+        <p class="card-note">1つ選択</p>
+      </div>
+      <div class="order-switch" role="radiogroup" aria-labelledby="order-heading">
+        <input type="radio" id="order-sequential" name="order" value="sequential">
+        <label for="order-sequential">順番に出題</label>
+        <input type="radio" id="order-random" name="order" value="random" checked>
+        <label for="order-random">ランダムに出題</label>
+      </div>
+      <p class="card-desc order-note">「順番」は回次→問番号の順に先頭から出題します（出題状態を「未出題」にすると続きから解けます）。「ランダム」は対象からランダムに選びます。</p>
+    </section>
+
+    <!-- 9. 開始 -->
+    <div class="start-area">
+      <p id="target-summary" class="target-summary" aria-live="polite">対象：—</p>
+      <button type="button" id="start-btn" class="btn-start" disabled>演習を始める</button>
+    </div>
+  </main>
+
+  <!-- ========== ② 出題 ========== -->
+  <main id="screen-quiz" class="screen" hidden aria-label="出題">
+    <div class="quiz-top">
+      <p class="quiz-meta" id="quiz-meta"></p>
+      <div class="quiz-top-row">
+        <p id="quiz-counter" class="quiz-counter" aria-live="polite">0 / 0</p>
+        <button type="button" id="quit-btn" class="btn-pill-small">中断する</button>
+      </div>
+      <div id="quiz-progress" class="quiz-progress" role="progressbar" aria-label="この演習の進み具合"
+           aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+        <div id="quiz-progress-fill" class="quiz-progress-fill"></div>
+      </div>
+    </div>
+
+    <article id="quiz-card" class="card quiz-card"></article>
+
+    <nav id="quiz-nav" class="next-bar quiz-nav" aria-label="問題の移動">
+      <p id="nav-hint" class="nav-hint"></p>
+      <div class="quiz-nav-buttons">
+        <button type="button" id="prev-btn" class="btn-secondary">前へ</button>
+        <button type="button" id="next-btn" class="btn-start">次へ</button>
+      </div>
+    </nav>
+  </main>
+
+  <!-- ========== ③ 結果 ========== -->
+  <main id="screen-result" class="screen" hidden aria-labelledby="result-heading">
+    <header class="result-head">
+      <p class="app-eyebrow">RESULT</p>
+      <h2 id="result-heading" class="result-title" tabindex="-1">今回の結果</h2>
+    </header>
+
+    <section class="card score-card" aria-label="成績">
+      <p id="score-line" class="score-line"></p>
+      <dl id="result-stats" class="result-stats"></dl>
+      <p id="result-changes" class="card-desc"></p>
+    </section>
+
+    <section class="card" aria-labelledby="result-list-heading">
+      <div class="card-head">
+        <h2 id="result-list-heading" class="card-title">問題別の結果</h2>
+      </div>
+      <ol id="result-list" class="result-list"></ol>
+    </section>
+
+    <div class="result-actions">
+      <button type="button" id="retry-wrong-btn" class="btn-start">間違えた問題をもう一度</button>
+      <button type="button" id="retry-same-btn" class="btn-secondary-lg">同じ条件でもう一度</button>
+      <button type="button" id="back-setup-btn" class="btn-secondary-lg">スタート画面に戻る</button>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>歴史能力検定 日本史1級模擬試験（非公式）</p>
+    <p>演習の記録はこのブラウザ内にのみ保存されます</p>
+  </footer>
+</div>
+
+  <dialog id="image-dialog" class="image-dialog" aria-label="画像の拡大表示">
+    <form method="dialog" class="image-dialog-head">
+      <span id="image-dialog-title"></span>
+      <button type="submit" class="btn-pill-small">閉じる</button>
+    </form>
+    <img id="image-dialog-img" src="" alt="">
+  </dialog>
+
+  <input type="file" id="folder-input" accept=".json,application/json" multiple hidden>
+
+  <script src="assets/exam.js"></script>
+  <script src="assets/practice.js"></script>
+</body>
+</html>
