@@ -152,8 +152,8 @@ body.page-practice {
 /* モード切替（exam.css の白版を演習モードでは墨×金茶に） */
 .page-practice .app-mode-switch {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: min(100%, 420px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: min(100%, 570px);
   margin-top: 18px;
   padding: 4px;
   border: 1px solid var(--line-strong);
@@ -1344,7 +1344,7 @@ body[data-screen="screen-result"] .app-title {
   letter-spacing: 0.08em;
 }
 body[data-screen="screen-quiz"] .app-mode-switch,
-body[data-screen="screen-result"] .app-mode-switch { width: 280px; margin-top: 0; }
+body[data-screen="screen-result"] .app-mode-switch { width: 430px; margin-top: 0; }
 body[data-screen="screen-quiz"] .app-mode-switch .mode-switch-item,
 body[data-screen="screen-result"] .app-mode-switch .mode-switch-item { min-height: 40px; font-size: 0.82rem; padding: 6px 8px; }
 

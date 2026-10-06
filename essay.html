@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#101014">
+  <title>論述対策 | 歴史能力検定 日本史1級模擬試験</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/exam.css">
+  <link rel="stylesheet" href="assets/essay.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKL5WQJBSB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TKL5WQJBSB');
+  </script>
+</head>
+<body class="page-essay" data-screen="setup">
+<div class="essay-app">
+  <header class="essay-header">
+    <p class="essay-eyebrow">JAPANESE HISTORY GRADE 1</p>
+    <h1 class="essay-title">
+      <span class="essay-title-main">歴史能力検定 <span class="nowrap">日本史1級模擬試験</span></span>
+      <span class="essay-title-sub">論述対策</span>
+    </h1>
+    <p class="essay-lead"><span id="total-theme-count">250</span>テーマを、知識の再生 → 80字への圧縮 → 比較で身につけます。</p>
+    <nav class="mode-switch essay-mode-switch" aria-label="モード切替">
+      <a href="index.html" class="mode-switch-item" data-mode-link="mock"><span class="mode-switch-mark" aria-hidden="true"></span>模試モード</a>
+      <a href="practice.html" class="mode-switch-item" data-mode-link="practice"><span class="mode-switch-mark" aria-hidden="true"></span>演習モード</a>
+      <a href="essay.html" class="mode-switch-item is-current" aria-current="page" data-mode-link="essay"><span class="mode-switch-mark" aria-hidden="true"></span>論述対策</a>
+    </nav>
+  </header>
+
+  <div id="load-notice" class="load-notice" hidden></div>
+
+  <main id="screen-setup" class="essay-screen" aria-label="論述対策の設定">
+    <section class="essay-card progress-card" aria-labelledby="progress-heading">
+      <div class="card-head-row">
+        <div>
+          <p class="section-kicker">PROGRESS</p>
+          <h2 id="progress-heading" class="section-title">説明できるテーマを増やす</h2>
+        </div>
+        <button type="button" id="reset-progress-btn" class="small-btn">進捗を消す</button>
+      </div>
+      <p id="progress-headline" class="progress-headline">読み込み中…</p>
+      <div class="progress-track" aria-hidden="true"><span id="progress-fill"></span></div>
+      <div id="period-progress" class="period-progress"></div>
+      <div class="status-legend" aria-label="状態の内訳">
+        <span><i class="status-dot is-new"></i>未着手 <b id="count-new">0</b></span>
+        <span><i class="status-dot is-review"></i>要復習 <b id="count-review">0</b></span>
+        <span><i class="status-dot is-learned"></i>習得 <b id="count-learned">0</b></span>
+      </div>
+    </section>
+
+    <section class="essay-card" aria-labelledby="period-heading">
+      <div class="card-head-row compact"><h2 id="period-heading" class="section-title small">時代</h2><span class="section-note">複数選択可</span></div>
+      <div id="period-options" class="filter-grid" role="group" aria-labelledby="period-heading"></div>
+    </section>
+
+    <section class="essay-card" aria-labelledby="importance-heading">
+      <div class="card-head-row compact"><h2 id="importance-heading" class="section-title small">重要度</h2><span class="section-note">複数選択可</span></div>
+      <div id="importance-options" class="filter-grid importance-grid" role="group" aria-labelledby="importance-heading"></div>
+    </section>
+
+    <section class="essay-card" aria-labelledby="status-heading">
+      <div class="card-head-row compact"><h2 id="status-heading" class="section-title small">学習状態</h2><span class="section-note">複数選択可</span></div>
+      <div id="status-options" class="filter-grid status-grid" role="group" aria-labelledby="status-heading"></div>
+    </section>
+
+    <section class="essay-card" aria-labelledby="session-heading">
+      <div class="card-head-row compact"><h2 id="session-heading" class="section-title small">今回の学習</h2><span id="candidate-note" class="section-note">対象 —</span></div>
+      <div class="session-row">
+        <fieldset class="mini-fieldset">
+          <legend>テーマ数</legend>
+          <div id="count-options" class="segmented" role="radiogroup"></div>
+        </fieldset>
+        <fieldset class="mini-fieldset">
+          <legend>出題順</legend>
+          <div class="segmented">
+            <label><input type="radio" name="order" value="sequential" checked><span>順番</span></label>
+            <label><input type="radio" name="order" value="random"><span>ランダム</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <button type="button" id="start-btn" class="primary-btn" disabled>論述対策を始める</button>
+    </section>
+
+    <details class="essay-card theme-browser" id="theme-browser">
+      <summary>テーマ一覧から選ぶ</summary>
+      <div class="browser-body">
+        <label class="search-box" for="theme-search"><span>検索</span><input id="theme-search" type="search" placeholder="例：田堵、日米安保、鎌倉幕府"></label>
+        <p class="browser-note">テーマ名・問い・重要知識から検索できます。</p>
+        <div id="theme-list" class="theme-list"></div>
+      </div>
+    </details>
+  </main>
+
+  <main id="screen-study" class="essay-screen" hidden aria-label="論述対策">
+    <div class="study-top">
+      <div>
+        <p id="study-meta" class="study-meta"></p>
+        <p id="study-counter" class="study-counter">0 / 0</p>
+      </div>
+      <button type="button" id="quit-btn" class="small-btn">設定へ戻る</button>
+    </div>
+    <div class="session-progress"><span id="session-progress-fill"></span></div>
+
+    <article class="essay-card study-card">
+      <div class="theme-title-row">
+        <div>
+          <p id="study-period" class="theme-period"></p>
+          <h2 id="study-theme" class="theme-title"></h2>
+        </div>
+        <span id="study-importance" class="importance-badge"></span>
+      </div>
+
+      <section class="question-block" aria-labelledby="question-label">
+        <p id="question-label" class="block-label">QUESTION</p>
+        <p id="study-question" class="study-question"></p>
+      </section>
+
+      <div id="pre-answer-actions" class="pre-answer-actions">
+        <button type="button" id="write-btn" class="secondary-btn">80字で書いてみる</button>
+        <button type="button" id="reveal-btn" class="primary-btn inline-primary">答えを見る</button>
+      </div>
+
+      <section id="writing-panel" class="writing-panel" hidden aria-labelledby="writing-label">
+        <div class="writing-head">
+          <p id="writing-label" class="block-label">YOUR 80 CHARACTERS</p>
+          <span id="char-count" class="char-count">0 / 80字</span>
+        </div>
+        <textarea id="answer-input" rows="6" maxlength="240" placeholder="80字以内を目安に、自分の言葉でまとめてください。"></textarea>
+        <p class="writing-note">改行は字数に含めません。採点は自動では行わず、コア回答・重要知識と比較します。</p>
+      </section>
+
+      <section id="answer-panel" class="answer-panel" hidden aria-labelledby="answer-label">
+        <p id="answer-label" class="block-label">CORE ANSWER</p>
+        <p id="core-answer" class="core-answer"></p>
+
+        <div class="node-section">
+          <p class="block-label">KNOWLEDGE NODES</p>
+          <div id="knowledge-nodes" class="node-list"></div>
+        </div>
+
+        <div id="self-answer-compare" class="self-answer-compare" hidden>
+          <p class="block-label">YOUR ANSWER</p>
+          <p id="self-answer-text"></p>
+        </div>
+
+        <div class="rating-section">
+          <p class="rating-title">このテーマの状態</p>
+          <div class="rating-actions">
+            <button type="button" class="rating-btn is-review" data-rate="review">要復習</button>
+            <button type="button" class="rating-btn is-learned" data-rate="learned">習得</button>
+          </div>
+          <p id="rating-note" class="rating-note" aria-live="polite"></p>
+        </div>
+
+        <div class="ai-actions">
+          <button type="button" id="ai-review-btn" class="ai-btn" disabled>AI添削用プロンプトをコピー</button>
+          <button type="button" id="ai-deep-btn" class="ai-btn">AI深掘り用プロンプトをコピー</button>
+        </div>
+        <p class="ai-note">コピーしたプロンプトをChatGPT・Claudeなどに貼り付けて使えます。</p>
+      </section>
+    </article>
+
+    <nav class="study-nav" aria-label="テーマ移動">
+      <button type="button" id="prev-btn" class="secondary-btn">前へ</button>
+      <button type="button" id="next-btn" class="primary-btn inline-primary">次へ</button>
+    </nav>
+  </main>
+
+  <footer class="essay-footer">
+    <p>歴史能力検定 日本史1級模擬試験（非公式）</p>
+    <p>論述対策の進捗はこのブラウザ内にのみ保存されます</p>
+  </footer>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="core-file-input" accept=".json,application/json" hidden>
+
+<script src="assets/essay.js"></script>
+</body>
+</html>

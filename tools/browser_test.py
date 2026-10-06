@@ -190,17 +190,17 @@ def main():
 
         # ================= 41. 模試モード回帰 =================
         page.goto(f"{BASE}/index.html")
-        page.wait_for_function("document.querySelectorAll('.mock-card').length === 27")
+        page.wait_for_function("document.querySelectorAll('.mock-card').length === 29")
         datafiles = [json.load(open(f, encoding="utf-8")) for f in sorted(glob.glob(os.path.join(ROOT, "data", "mock*.json")))]
         hard = sum(1 for d in datafiles if d["exam_difficulty"] == "難")
         easy = sum(1 for d in datafiles if d["exam_difficulty"] == "易")
-        check("41a index: 模試カード27件", page.locator(".mock-card").count() == 27)
+        check("41a index: 模試カード29件", page.locator(".mock-card").count() == 29)
         check("41b index: 難/易バッジ数がJSONと一致", page.locator(".mock-difficulty-mark.is-hard").count() == hard and page.locator(".mock-difficulty-mark.is-easy").count() == easy, f"難{hard} 易{easy}")
-        check("41c index: 問題/解答リンク", page.locator('a[href="exam.html?mock=001"]').count() == 1 and page.locator('a[href="answers.html?mock=027"]').count() == 1)
+        check("41c index: 問題/解答リンク", page.locator('a[href="exam.html?mock=001"]').count() == 1 and page.locator('a[href="answers.html?mock=029"]').count() == 1)
         check("41d index: 模試モードが aria-current・白背景", page.locator('.mode-switch a[aria-current]').inner_text().strip() == "模試モード"
               and page.evaluate("getComputedStyle(document.body).backgroundColor") == "rgb(255, 255, 255)")
         check("42b 模試モードのサイト名も統一", page.locator("h1").inner_text().strip() == SITE_NAME, page.locator("h1").inner_text())
-        for mid in ("001", "025", "027"):
+        for mid in ("001", "025", "029"):
             page.goto(f"{BASE}/exam.html?mock={mid}")
             page.wait_for_selector(".question-card")
             check(f"41e exam.html?mock={mid}: 30問", page.locator(".question-card").count() == 30)
@@ -209,7 +209,7 @@ def main():
             check(f"41f answers.html?mock={mid}: 30解答＋正解一覧", page.locator(".answer-card").count() == 30 and page.locator(".answer-summary-item").count() == 30)
         check("42c 解答ページの見出しも統一", SITE_NAME in page.locator(".eyebrow").inner_text())
 
-        # ================= 39/40. 実URLで27 JSON 自動fetch =================
+        # ================= 39/40. 実URLで29 JSON 自動fetch =================
         page.goto(f"{BASE}/practice.html")
         page.wait_for_function("window.RinPractice && window.RinPractice.loadStats")
         page.evaluate("localStorage.clear()")
@@ -230,9 +230,9 @@ def main():
         page.remove_listener("requestfailed", on_fail)
         stats = page.evaluate("window.RinPractice.loadStats")
         print("  loadStats:", stats, "network ok/fail:", net["ok"], net["fail"])
-        check("39 mock001〜027 自動fetch成功（ネットワーク実測 27/0）", net["ok"] == 27 and net["fail"] == 0 and len(net["urls"]) == 27 and stats["ok"] == 27 and stats["failed"] == 0)
-        check("40 総問題数810（4択540・記述216・論述54）", stats["total"] == TOTAL == 810 and stats["byType"] == {"4択": 540, "記述": 216, "論述": 54})
-        check("40b エラーバナーなし・0 / 810 表示", page.locator("#load-notice").is_hidden() and "0 / 810" in page.locator("#mastery-headline").inner_text())
+        check("39 mock001〜029 自動fetch成功（ネットワーク実測 29/0）", net["ok"] == 29 and net["fail"] == 0 and len(net["urls"]) == 29 and stats["ok"] == 29 and stats["failed"] == 0)
+        check("40 総問題数870（4択580・記述232・論述58）", stats["total"] == TOTAL == 870 and stats["byType"] == {"4択": 580, "記述": 232, "論述": 58})
+        check("40b エラーバナーなし・0 / 870 表示", page.locator("#load-notice").is_hidden() and "0 / 870" in page.locator("#mastery-headline").inner_text())
         check("42 演習モード左上が「歴史能力検定 日本史1級模擬試験」",
               page.evaluate("document.querySelector('.app-title-main').textContent.trim()") == SITE_NAME
               and "演習トレーニング" in page.locator(".app-title-sub").inner_text())
@@ -532,7 +532,7 @@ def main():
         p4.set_input_files("#folder-input", sorted(glob.glob(os.path.join(ROOT, "data", "mock*.json"))))
         p4.wait_for_function("window.RinPractice.loadStats && window.RinPractice.loadStats.total > 0")
         st4 = p4.evaluate("window.RinPractice.loadStats")
-        check("file:// でもJSON選択で810問読込・開始可能", st4["ok"] == 27 and st4["total"] == 810 and p4.locator("#start-btn").is_enabled() and not errs4)
+        check("file:// でもJSON選択で870問読込・開始可能", st4["ok"] == 29 and st4["total"] == 870 and p4.locator("#start-btn").is_enabled() and not errs4)
         ctx4.close()
 
         browser.close()

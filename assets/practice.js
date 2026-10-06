@@ -1251,7 +1251,7 @@
         <p>ブラウザの安全上の制限で、この状態では問題データ（data/mock001.json〜）を自動で読み込めません。
         GitHub Pages などの Web サーバー経由で開くか、リポジトリのフォルダで <code>python3 -m http.server</code> を実行して
         <code>http://localhost:8000/practice.html</code> を開いてください。</p>
-        <p>このまま使う場合は、<strong>data フォルダ内の mock001.json〜mock027.json をすべて選択</strong>して読み込めます。</p>
+        <p>このまま使う場合は、<strong>data フォルダ内の mock001.json〜mock029.json をすべて選択</strong>して読み込めます。</p>
         <p><button type="button" class="btn-pill-small" id="pick-json-btn">data フォルダのJSONを選んで読み込む</button></p>
       </div>`;
     box.hidden = false;
