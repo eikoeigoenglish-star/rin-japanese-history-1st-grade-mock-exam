@@ -151,8 +151,8 @@
       return;
     }
     list.innerHTML = items.map(item => `
-      <button type="button" class="theme-list-btn" data-id="${item.id}">
-        <span class="theme-no">#${String(item.id).padStart(3, '0')}</span>
+      <button type="button" class="theme-list-btn" data-id="${escapeHtml(item.id)}">
+        <span class="theme-no">#${escapeHtml(String(item.id).padStart(3, '0'))}</span>
         <span class="theme-list-title">${escapeHtml(item.theme)}</span>
         <span class="theme-list-meta">${escapeHtml(item.period)} / ${escapeHtml(item.importance)} / ${escapeHtml(statusLabel(statusOf(item)))}</span>
       </button>

@@ -3,8 +3,8 @@
   - 問題データは data/mockXXX.json（模試モードと同一の正本）だけを読む
   - 4択：選択で即採点 / 記述：accepted_answers との完全一致 / 論述：cloze の全空欄完全一致
   - 習得度：未出題・ミス・ヒット・ダブル・トリプル（localStorage）
-  依存：assets/exam.js（AVAILABLE_MOCKS, escapeHtml, nl2br, renderRomanItems, renderImages,
-        renderExamDifficultyMark）を先に読み込むこと。
+  依存：assets/exam.js（AVAILABLE_MOCKS, escapeHtml, nl2br, sanitizeImageSrc, renderRomanItems,
+        renderImages, renderExamDifficultyMark）を先に読み込むこと。
 */
 (() => {
   'use strict';
@@ -152,6 +152,10 @@
   }
 
   function normalizeQuestion(raw, mock) {
+    // 問番号は整数のみ（HTML属性・ID生成に使うため、ローカルJSON等の不正値は除外）
+    if (!Number.isInteger(Number(raw.number)) || String(raw.number).trim() === '') {
+      return { error: `${mock.label}: 問番号が不正な問題を除外しました` };
+    }
     const id = questionId(mock.id, raw.number);
     const base = {
       id,
@@ -171,8 +175,11 @@
       }
       const imgs = Array.isArray(raw.images) ? raw.images : [];
       const labelled = imgs.filter(img => CHOICE_LABELS.includes(img.label) && img.src);
+      if (labelled.some(img => !sanitizeImageSrc(img.src))) {
+        return { error: `${id}: 画像選択肢の src が不正（相対パス以外）です` };
+      }
       if (labelled.length >= 2) {
-        return { ...base, kind: 'image-choice', options: labelled.map(img => ({ label: img.label, src: img.src, alt: img.alt })) };
+        return { ...base, kind: 'image-choice', options: labelled.map(img => ({ label: img.label, src: sanitizeImageSrc(img.src), alt: img.alt })) };
       }
       return { error: `${id}: 4択の選択肢（choices / 画像選択肢）がありません` };
     }
@@ -198,7 +205,8 @@
       const blanks = [];
       for (const b of cz.blanks) {
         const acc = cleanList(b?.accepted_answers) || (typeof b?.answer === 'string' && b.answer.trim() ? [b.answer.trim()] : null);
-        if (!acc || typeof b.answer !== 'string' || !cz.text.includes(`{{${b.id}}}`)) {
+        // 空欄IDは数字のみ（input の id / data属性 / CSSセレクタに使うため）
+        if (!/^\d{1,2}$/.test(String(b?.id)) || !acc || typeof b.answer !== 'string' || !cz.text.includes(`{{${b.id}}}`)) {
           return { error: `${id}: cloze の空欄データが不正です` };
         }
         blanks.push({ id: b.id, answer: b.answer, accepted: acc });
@@ -1187,11 +1195,13 @@
   // =======================
   function openZoom(src, alt, title) {
     const dlg = $('image-dialog');
+    const safeSrc = sanitizeImageSrc(src);
+    if (!safeSrc) return;
     if (!dlg || typeof dlg.showModal !== 'function') {
-      window.open(src, '_blank', 'noopener');
+      window.open(safeSrc, '_blank', 'noopener');
       return;
     }
-    $('image-dialog-img').src = src;
+    $('image-dialog-img').src = safeSrc;
     $('image-dialog-img').alt = alt || '';
     $('image-dialog-title').textContent = title || '';
     dlg.showModal();

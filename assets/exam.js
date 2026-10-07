@@ -47,6 +47,15 @@ function nl2br(value) {
   return escapeHtml(value).replace(/\n/g, '<br>');
 }
 
+// 画像の src は同一サイト内の相対パス（images/mockXXX/... など）のみ許可する。
+// javascript: / data: / http(s): / //host などのスキーム付き・外部URLや制御文字・バックスラッシュを含む値は空にする。
+function sanitizeImageSrc(value) {
+  const src = String(value ?? '').trim();
+  if (!src || src.length > 512) return '';
+  if (/^[a-z][a-z0-9+.-]*:/i.test(src) || src.startsWith('//') || /[\\\u0000-\u001f\u007f]/.test(src)) return '';
+  return src;
+}
+
 function getMockIdFromQuery() {
   const params = new URLSearchParams(window.location.search);
   return params.get('mock') || AVAILABLE_MOCKS[0]?.id || '001';
@@ -105,12 +114,12 @@ function renderImages(q) {
   if (!q.images?.length) return '';
 
   return `
-    <div class="question-images" aria-label="問${q.number}の資料画像">
+    <div class="question-images" aria-label="問${escapeHtml(q.number)}の資料画像">
       ${q.images.map(image => `
         <figure class="question-image-item">
           <div class="question-image-frame">
             <img
-              src="${escapeHtml(image.src)}"
+              src="${escapeHtml(sanitizeImageSrc(image.src))}"
               alt="${escapeHtml(image.alt || `資料${image.label || ''}`)}"
               loading="lazy"
               onerror="this.closest('.question-image-frame').classList.add('image-missing'); this.style.display='none';"
@@ -143,9 +152,9 @@ function renderChoices(q) {
 
 function renderQuestionCard(q) {
   return `
-    <section class="question-card" id="q${q.number}">
+    <section class="question-card" id="q${escapeHtml(q.number)}">
       <div class="question-head">
-        <div class="question-label">問${q.number}</div>
+        <div class="question-label">問${escapeHtml(q.number)}</div>
       </div>
 
       <p class="question-text">${nl2br(q.text || '')}</p>
@@ -176,7 +185,7 @@ function renderAnswerSummary(data) {
     if (isEssay) {
       return `
         <div class="answer-summary-item essay">
-          <span class="summary-number">${q.number}</span>
+          <span class="summary-number">${escapeHtml(q.number)}</span>
           <span class="summary-dash">―</span>
           <span class="summary-answer">${nl2br(answer)}</span>
         </div>
@@ -185,7 +194,7 @@ function renderAnswerSummary(data) {
 
     return `
       <div class="answer-summary-item">
-        <span class="summary-number">${q.number}</span>
+        <span class="summary-number">${escapeHtml(q.number)}</span>
         <span class="summary-dash">―</span>
         <span class="summary-answer">${nl2br(answer)}</span>
       </div>
@@ -235,9 +244,9 @@ function renderChoiceExplanations(q) {
 function renderAnswerCard(q) {
   const mainAnswer = q.model_answer || q.answer || '—';
   return `
-    <section class="answer-card" id="a${q.number}">
+    <section class="answer-card" id="a${escapeHtml(q.number)}">
       <div class="question-head">
-        <div class="question-label">問${q.number}</div>
+        <div class="question-label">問${escapeHtml(q.number)}</div>
         <div class="question-meta">
           ${q.period ? `<span class="badge">${escapeHtml(q.period)}</span>` : ''}
           ${q.type ? `<span class="badge">${escapeHtml(q.type)}</span>` : ''}
@@ -265,7 +274,7 @@ function renderAnswerCard(q) {
 }
 
 function renderQuestionJumpLinks(questions, targetPrefix) {
-  return questions.map(q => `<a href="#${targetPrefix}${q.number}">問${q.number}</a>`).join('');
+  return questions.map(q => `<a href="#${escapeHtml(targetPrefix)}${escapeHtml(q.number)}">問${escapeHtml(q.number)}</a>`).join('');
 }
 
 function setupCrossLinks(mockId) {
