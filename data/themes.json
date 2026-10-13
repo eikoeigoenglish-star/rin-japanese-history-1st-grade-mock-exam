@@ -1,0 +1,12 @@
+[
+  {
+    "id": "theme-2026-toyotomi",
+    "label": "2026公開テーマ",
+    "title": "豊臣家と京都",
+    "year": 2026,
+    "grade": 2,
+    "file": "theme-2026-toyotomi.json",
+    "progressKey": "kk2-theme-2026-toyotomi-progress-v1",
+    "active": true
+  }
+]

@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>歴史能力検定 日本史1級模擬試験</title>
-  <link rel="stylesheet" href="assets/exam.css">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#101014">
+  <title>京都検定2級 四択トレーニング</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=4.5.0">
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKL5WQJBSB"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,44 +21,304 @@
     gtag('config', 'G-TKL5WQJBSB');
   </script>
 </head>
-<body class="page-home">
-  <header class="site-header">
-    <div class="wrap">
-      <h1>歴史能力検定 日本史1級模擬試験</h1>
-      <nav class="mode-switch" aria-label="モード切替">
-        <a href="index.html" class="mode-switch-item is-current" aria-current="page" data-mode-link="mock">
-          <span class="mode-switch-mark" aria-hidden="true"></span>模試モード
-        </a>
-        <a href="practice.html" class="mode-switch-item" data-mode-link="practice">
-          <span class="mode-switch-mark" aria-hidden="true"></span>演習モード
-        </a>
-        <a href="essay.html" class="mode-switch-item" data-mode-link="essay">
-          <span class="mode-switch-mark" aria-hidden="true"></span>論述対策
-        </a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="wrap home-main">
-    <section class="panel">
-      <h2>使い方</h2>
-      <ol class="plain-list ordered">
-        <li>「問題ページ」から模擬試験を開始できます。</li>
-        <li>解き終えたら「解答ページ」で正解・解説を確認できます。</li>
-        <li>スマートフォンで1問ずつ解いて自動採点・復習したいときは「<a href="practice.html">演習モード</a>」を使えます。</li>
-        <li>重要テーマを説明する力と80字への圧縮を鍛えたいときは「<a href="essay.html">論述対策</a>」を使えます。</li>
-      </ol>
-    </section>
+<body>
+<div class="app">
 
-    <section class="panel">
-      <div class="section-head">
-        <h2>模試一覧</h2>
+  <!-- ========================= -->
+  <!-- ① 設定画面 -->
+  <!-- ========================= -->
+  <main id="screen-start" class="screen">
+    <header class="app-header">
+      <p class="app-eyebrow">KYOTO KENTEI — GRADE 2</p>
+      <h1 class="app-title">京都検定2級<span class="app-title-sub">四択トレーニング</span></h1>
+      <p class="app-lead" id="app-lead">1100問すべてをトリプルにするのが目標です。</p>
+      <p class="map-nav"><a href="map.html">出題地図を見る →</a></p>
+    </header>
+    </header>
+
+    <!-- 学習モード切替。active な公開テーマがあるときだけ theme.js が表示する -->
+    <nav id="mode-switch" class="mode-switch" role="tablist" aria-label="学習モード" hidden>
+      <button type="button" class="mode-tab mode-tab-past" id="mode-tab-past" role="tab"
+              data-mode="past" aria-controls="mode-past" aria-selected="true">
+        <span class="mode-tab-main">過去問トレーニング</span>
+        <span class="mode-tab-sub">第12〜27回・1100問</span>
+      </button>
+    </nav>
+
+    <!-- ===== 過去問トレーニング モード ===== -->
+    <div id="mode-past" class="mode-panel" role="tabpanel" aria-labelledby="mode-tab-past">
+
+    <!-- 進捗 -->
+    <section class="panel mastery-panel" aria-labelledby="mastery-heading">
+      <div class="panel-head">
+        <h2 id="mastery-heading" class="panel-title">進捗</h2>
+        <p id="mastery-headline" class="mastery-headline"></p>
+        <button type="button" id="reset-progress-btn" class="btn-ghost btn-small">進捗を消す</button>
       </div>
-      <div id="mock-list" class="mock-grid"></div>
+
+      <div class="mastery-bar" id="mastery-bar" role="progressbar"
+           aria-label="トリプル到達率" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="mastery-seg seg-triple" id="seg-triple"></span>
+        <span class="mastery-seg seg-double" id="seg-double"></span>
+        <span class="mastery-seg seg-hit" id="seg-hit"></span>
+        <span class="mastery-seg seg-miss" id="seg-miss"></span>
+        <span class="mastery-seg seg-new" id="seg-new"></span>
+      </div>
+
+      <ul class="mastery-legend">
+        <li><span class="dot dot-triple"></span>トリプル<b id="count-triple">0</b></li>
+        <li><span class="dot dot-double"></span>ダブル<b id="count-double">0</b></li>
+        <li><span class="dot dot-hit"></span>ヒット<b id="count-hit">0</b></li>
+        <li><span class="dot dot-miss"></span>ミス<b id="count-miss">0</b></li>
+        <li><span class="dot dot-new"></span>未出題<b id="count-new">0</b></li>
+      </ul>
+
+      <p id="mastery-note" class="panel-desc mastery-note">
+        正解すると1段上がり、3回連続で正解するとトリプル。間違えるとミスに戻ります。
+      </p>
     </section>
+
+    <!-- 回次 -->
+    <section class="panel" aria-labelledby="exam-heading">
+      <div class="panel-head">
+        <h2 id="exam-heading" class="panel-title">回次</h2>
+        <p class="panel-note">複数選択可</p>
+        <button type="button" id="exam-toggle-btn" class="btn-ghost btn-small">すべて解除</button>
+      </div>
+
+      <div class="chip-group" role="group" aria-labelledby="exam-heading">
+        <input type="checkbox" id="exam-12" name="exam" value="12" checked>
+        <label class="chip" for="exam-12">第12回</label>
+
+        <input type="checkbox" id="exam-13" name="exam" value="13" checked>
+        <label class="chip" for="exam-13">第13回</label>
+
+        <input type="checkbox" id="exam-14" name="exam" value="14" checked>
+        <label class="chip" for="exam-14">第14回</label>
+
+        <input type="checkbox" id="exam-15" name="exam" value="15" checked>
+        <label class="chip" for="exam-15">第15回</label>
+
+        <input type="checkbox" id="exam-16" name="exam" value="16" checked>
+        <label class="chip" for="exam-16">第16回</label>
+
+        <input type="checkbox" id="exam-17" name="exam" value="17" checked>
+        <label class="chip" for="exam-17">第17回</label>
+
+        <input type="checkbox" id="exam-19" name="exam" value="19" checked>
+        <label class="chip" for="exam-19">第19回</label>
+
+        <input type="checkbox" id="exam-21" name="exam" value="21" checked>
+        <label class="chip" for="exam-21">第21回</label>
+
+        <input type="checkbox" id="exam-23" name="exam" value="23" checked>
+        <label class="chip" for="exam-23">第23回</label>
+
+        <input type="checkbox" id="exam-25" name="exam" value="25" checked>
+        <label class="chip" for="exam-25">第25回</label>
+
+        <input type="checkbox" id="exam-27" name="exam" value="27" checked>
+        <label class="chip" for="exam-27">第27回</label>
+      </div>
+    </section>
+
+    <!-- 出題範囲 -->
+    <section class="panel" aria-labelledby="range-heading">
+      <div class="panel-head">
+        <h2 id="range-heading" class="panel-title">出題範囲</h2>
+        <p class="panel-note">複数選択可</p>
+        <button type="button" id="range-toggle-btn" class="btn-ghost btn-small">すべて解除</button>
+      </div>
+      <p class="panel-desc">問題番号の範囲を選びます。番号帯はそのまま出題ジャンルに対応しています。</p>
+
+      <div class="chip-group" role="group" aria-labelledby="range-heading">
+        <input type="checkbox" id="range-01-10" name="range" value="1-10" checked>
+        <label class="chip" for="range-01-10">1〜10</label>
+
+        <input type="checkbox" id="range-11-20" name="range" value="11-20" checked>
+        <label class="chip" for="range-11-20">11〜20</label>
+
+        <input type="checkbox" id="range-21-30" name="range" value="21-30" checked>
+        <label class="chip" for="range-21-30">21〜30</label>
+
+        <input type="checkbox" id="range-31-40" name="range" value="31-40" checked>
+        <label class="chip" for="range-31-40">31〜40</label>
+
+        <input type="checkbox" id="range-41-50" name="range" value="41-50" checked>
+        <label class="chip" for="range-41-50">41〜50</label>
+
+        <input type="checkbox" id="range-51-60" name="range" value="51-60" checked>
+        <label class="chip" for="range-51-60">51〜60</label>
+
+        <input type="checkbox" id="range-61-70" name="range" value="61-70" checked>
+        <label class="chip" for="range-61-70">61〜70</label>
+
+        <input type="checkbox" id="range-71-80" name="range" value="71-80" checked>
+        <label class="chip" for="range-71-80">71〜80</label>
+
+        <input type="checkbox" id="range-81-90" name="range" value="81-90" checked>
+        <label class="chip" for="range-81-90">81〜90</label>
+
+        <input type="checkbox" id="range-91-100" name="range" value="91-100" checked>
+        <label class="chip" for="range-91-100">91〜100</label>
+      </div>
+    </section>
+
+    <!-- 出題状態 -->
+    <section class="panel" aria-labelledby="stage-heading">
+      <div class="panel-head">
+        <h2 id="stage-heading" class="panel-title">出題状態</h2>
+        <p class="panel-note">複数選択可</p>
+      </div>
+      <p class="panel-desc">どの状態の問題を出すか選びます。ミスと未出題だけに絞ると弱点だけを回せます。</p>
+
+      <div class="chip-group" role="group" aria-labelledby="stage-heading">
+        <input type="checkbox" id="stage-new" name="stage" value="new" checked>
+        <label class="chip" for="stage-new">未出題<span class="chip-count" id="chip-count-new">0</span></label>
+
+        <input type="checkbox" id="stage-miss" name="stage" value="miss" checked>
+        <label class="chip" for="stage-miss">ミス<span class="chip-count" id="chip-count-miss">0</span></label>
+
+        <input type="checkbox" id="stage-hit" name="stage" value="hit" checked>
+        <label class="chip" for="stage-hit">ヒット<span class="chip-count" id="chip-count-hit">0</span></label>
+
+        <input type="checkbox" id="stage-double" name="stage" value="double" checked>
+        <label class="chip" for="stage-double">ダブル<span class="chip-count" id="chip-count-double">0</span></label>
+
+        <input type="checkbox" id="stage-triple" name="stage" value="triple" checked>
+        <label class="chip" for="stage-triple">トリプル<span class="chip-count" id="chip-count-triple">0</span></label>
+      </div>
+    </section>
+
+    <!-- 頻出度 -->
+    <section class="panel" aria-labelledby="freq-heading">
+      <div class="panel-head">
+        <h2 id="freq-heading" class="panel-title">頻出度</h2>
+        <p class="panel-note">複数選択可</p>
+      </div>
+      <p class="panel-desc">その問題の答えが、11回分の過去問でいくつの回の正解になったか。多いほど繰り返し問われている論点です。</p>
+
+      <div class="chip-group" role="group" aria-labelledby="freq-heading">
+        <input type="checkbox" id="freq-high" name="freq" value="high" checked>
+        <label class="chip chip-wide" for="freq-high">3回以上<span class="chip-count">98</span></label>
+
+        <input type="checkbox" id="freq-mid" name="freq" value="mid" checked>
+        <label class="chip chip-wide" for="freq-mid">2回<span class="chip-count">266</span></label>
+
+        <input type="checkbox" id="freq-low" name="freq" value="low" checked>
+        <label class="chip chip-wide" for="freq-low">1回のみ<span class="chip-count">736</span></label>
+      </div>
+    </section>
+
+    <!-- 出題問数 -->
+    <section class="panel" aria-labelledby="count-heading">
+      <div class="panel-head">
+        <h2 id="count-heading" class="panel-title">出題問数</h2>
+        <p id="count-availability" class="panel-note" aria-live="polite">1つ選択</p>
+      </div>
+
+      <div class="chip-group" role="radiogroup" aria-labelledby="count-heading">
+        <input type="radio" id="count-all" name="count" value="all">
+        <label class="chip chip-wide" for="count-all">対象すべて<span class="chip-count" id="count-all-num">0</span></label>
+
+        <input type="radio" id="count-100" name="count" value="100">
+        <label class="chip" for="count-100">100問</label>
+
+        <input type="radio" id="count-50" name="count" value="50">
+        <label class="chip" for="count-50">50問</label>
+
+        <input type="radio" id="count-25" name="count" value="25">
+        <label class="chip" for="count-25">25問</label>
+
+        <input type="radio" id="count-20" name="count" value="20">
+        <label class="chip" for="count-20">20問</label>
+
+        <input type="radio" id="count-10" name="count" value="10">
+        <label class="chip" for="count-10">10問</label>
+
+        <input type="radio" id="count-5" name="count" value="5" checked>
+        <label class="chip" for="count-5">5問</label>
+
+        <input type="radio" id="count-3" name="count" value="3">
+        <label class="chip" for="count-3">3問</label>
+
+        <input type="radio" id="count-1" name="count" value="1">
+        <label class="chip" for="count-1">1問</label>
+      </div>
+    </section>
+
+    <div id="start-error" class="alert" role="alert" hidden></div>
+
+    <button id="start-btn" type="button" class="btn-primary btn-block">開始する</button>
+
+    </div>
+    <!-- ===== /過去問トレーニング モード ===== -->
+
+    <!-- ===== 公開テーマ モード（期間限定・過去問とは別管理）=====
+         theme.js が data/themes.json の active なテーマごとにパネルを描画する -->
+    <div id="theme-area" class="theme-area" hidden></div>
   </main>
 
+  <!-- ========================= -->
+  <!-- ② 出題画面 -->
+  <!-- ========================= -->
+  <main id="screen-quiz" class="screen" hidden>
+    <div class="quiz-top">
+      <p class="quiz-meta">
+        <span id="question-meta"></span>
+        <span id="question-stage" class="stage-tag"></span>
+      </p>
+      <p id="question-counter" class="quiz-counter" aria-live="polite"></p>
+    </div>
 
-  <script src="assets/exam.js"></script>
+    <div class="progress" role="progressbar" aria-label="進捗"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <article class="panel quiz-panel">
+      <h2 id="question-text" class="question-text" tabindex="-1"></h2>
+
+      <div id="answer-area" class="answer-area"></div>
+
+      <p class="quiz-hint" aria-hidden="true">キー 1〜4 で選択 ／ Enter で次へ</p>
+
+      <button id="next-btn" type="button" class="btn-primary btn-block">次へ</button>
+    </article>
+  </main>
+
+  <!-- ========================= -->
+  <!-- ③ 結果画面 -->
+  <!-- ========================= -->
+  <main id="screen-result" class="screen" hidden>
+    <header class="result-head">
+      <p class="app-eyebrow">RESULT</p>
+      <h2 class="panel-title-lg">結果</h2>
+    </header>
+
+    <section class="panel score-panel" aria-labelledby="score">
+      <p id="score" class="score-line"></p>
+      <div class="score-detail">
+        <p id="score-percent" class="score-percent"></p>
+        <p id="score-sub" class="score-sub"></p>
+        <p id="score-changes" class="score-changes"></p>
+      </div>
+    </section>
+
+    <section aria-label="各問題の結果">
+      <ol id="result-list" class="result-list"></ol>
+    </section>
+
+    <button id="back-to-start-btn" type="button" class="btn-secondary btn-block">スタート画面に戻る</button>
+  </main>
+
+  <footer class="app-footer">
+    <p>京都検定2級 四択トレーニング</p>
+  </footer>
+</div>
+
+<script src="app.js?v=4.5.0"></script>
+<script src="theme.js?v=4.5.0"></script>
 </body>
 </html>
