@@ -27,7 +27,10 @@ const AVAILABLE_MOCKS = [
   { id: '026', file: 'mock026.json', label: '第26回模試', note: '30問 / 4択20・記述8・論述2' },
   { id: '027', file: 'mock027.json', label: '第27回模試', note: '30問 / 4択20・記述8・論述2' },
   { id: '028', file: 'mock028.json', label: '第28回模試', note: '30問 / 4択20・記述8・論述2' },
-  { id: '029', file: 'mock029.json', label: '第29回模試', note: '30問 / 4択20・記述8・論述2' }
+  { id: '029', file: 'mock029.json', label: '第29回模試', note: '30問 / 4択20・記述8・論述2' },
+  { id: '030', file: 'mock030.json', label: '第30回模試', note: '30問 / 4択20・記述8・論述2' },
+  { id: '031', file: 'mock031.json', label: '第31回模試', note: '30問 / 4択20・記述8・論述2' },
+  { id: '032', file: 'mock032.json', label: '第32回模試', note: '30問 / 4択20・記述8・論述2' }
 ];
 
 function byId(id) {
