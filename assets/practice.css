@@ -503,6 +503,12 @@ body.page-practice {
 .chip-grid-mock { row-gap: 14px; padding-top: 4px; }
 .chip-grid-mock .chip { min-width: 96px; padding: 8px 14px; font-variant-numeric: tabular-nums; }
 
+/* 回次チップ：3秒長押し中だけ、削除操作の待機状態を視覚的に示す */
+.chip-grid-mock .chip-mock.is-long-pressing {
+  border-color: var(--ng-line);
+  box-shadow: inset 0 0 0 1px var(--ng-line), 0 0 0 3px rgba(220, 90, 90, 0.10);
+}
+
 /* 模試全体の難易度（難＝赤系・易＝青系・普通＝無印）をチップ右上に */
 .chip-grid-mock .mock-difficulty-mark {
   position: absolute;

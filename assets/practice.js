@@ -19,6 +19,7 @@
   const TYPES = ['4択', '記述', '論述'];
   const COUNT_OPTIONS = ['1', '3', '5', '10', '20', '30', 'all'];
   const DEFAULT_COUNT = '5';
+  const MOCK_LONG_PRESS_MS = 3000;
 
   // 表示順（進捗バー・凡例）
   const STAGES = [
@@ -466,6 +467,84 @@
     storage.remove(PROGRESS_KEY);
     renderMastery();
     updateSetup();
+  }
+
+  function resetMockProgress(mockId) {
+    const mock = state.mocks.find(m => m.id === mockId);
+    if (!mock) return;
+
+    const questions = state.all.filter(q => q.mockId === mockId);
+    const answered = questions.filter(q => stageOf(q.id) !== 'new').length;
+    const ok = window.confirm(`第${mock.no}回の進捗を消しますか？\n${answered}問分の記録を「未出題」に戻します。\nこの操作は取り消せません。`);
+    if (!ok) return;
+
+    for (const q of questions) delete state.streaks[q.id];
+    saveProgress();
+    renderMastery();
+    updateSetup();
+  }
+
+  function installMockLongPressReset() {
+    const area = $('mock-options');
+    if (!area) return;
+
+    let timer = null;
+    let pressedLabel = null;
+    let suppressClickLabel = null;
+    let suppressClickUntil = 0;
+
+    const clearPress = () => {
+      if (timer !== null) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+      pressedLabel?.classList.remove('is-long-pressing');
+      pressedLabel = null;
+    };
+
+    area.querySelectorAll('label.chip-mock').forEach(label => {
+      label.title = '3秒長押しで、この回次の進捗を消去';
+      label.setAttribute('aria-description', '3秒長押しで、この回次だけの進捗を消去できます');
+    });
+
+    area.addEventListener('pointerdown', e => {
+      if (e.button !== undefined && e.button !== 0) return;
+      const label = e.target.closest('label.chip-mock');
+      if (!label || !area.contains(label)) return;
+      const input = document.getElementById(label.htmlFor);
+      if (!input || input.disabled) return;
+
+      clearPress();
+      pressedLabel = label;
+      label.classList.add('is-long-pressing');
+      timer = window.setTimeout(() => {
+        timer = null;
+        label.classList.remove('is-long-pressing');
+        pressedLabel = null;
+        suppressClickLabel = label;
+        suppressClickUntil = Date.now() + 2000;
+        if (navigator.vibrate) navigator.vibrate(40);
+        resetMockProgress(String(input.value));
+      }, MOCK_LONG_PRESS_MS);
+    });
+
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(type => {
+      area.addEventListener(type, clearPress);
+    });
+
+    area.addEventListener('click', e => {
+      const label = e.target.closest('label.chip-mock');
+      if (label && label === suppressClickLabel && Date.now() <= suppressClickUntil) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        suppressClickLabel = null;
+        suppressClickUntil = 0;
+      }
+    }, true);
+
+    area.addEventListener('contextmenu', e => {
+      if (e.target.closest('label.chip-mock')) e.preventDefault();
+    });
   }
 
   // =======================
@@ -1317,6 +1396,8 @@
     $('screen-setup').addEventListener('change', e => {
       if (e.target.matches('input')) updateSetup();
     });
+    installMockLongPressReset();
+
     $('mock-select-all').addEventListener('click', () => {
       document.querySelectorAll('input[name="mock"]:not(:disabled)').forEach(i => { i.checked = true; });
       updateSetup();
